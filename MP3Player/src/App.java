@@ -17,13 +17,13 @@ public class App {
             System.out.println("5 - Load playlist from file");
             System.out.println("6 - Remove playlist");
             System.out.println("7 - Add track to playlist");
-            System.out.println("8 - Show tracks in playlist");
+            System.out.println("8 - Show tracks in playlist");//
             System.out.println("9 - Remove track from playlist");
             System.out.println("10 - Play next track");
             System.out.println("11 - Play previous track");
             System.out.println("12 - Repeat current track");
             System.out.println("13 - Stop current track");
-            System.out.println("14 - Show all tracks");
+            System.out.println("14 - Show all tracks"); //
             System.out.println("Enter your choice:");
 
             choice = scanner.nextInt();

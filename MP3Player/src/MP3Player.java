@@ -10,6 +10,7 @@ class MP3Player {
     private int playlistCounter;
     private Player player;
     private Thread playThread;
+    private boolean playing = false;
 
 
     public MP3Player() {
@@ -31,8 +32,13 @@ class MP3Player {
         if (playlists.containsKey(name)) {
             System.out.println("Playlist '" + name + "' already exists.");
         } else {
-            playlists.put(name, new Playlist(name, playlistCounter++));
-            System.out.println("Playlist '" + name + "' created.");
+            if(Objects.nonNull(name)){
+                playlists.put(name, new Playlist(name, playlistCounter++));
+                System.out.println("Playlist '" + name + "' createsdfsdfsdfd.");
+            }
+            else {
+                System.out.println("Playlist name can't be empty.");
+            }
         }
     }
 
@@ -83,6 +89,7 @@ class MP3Player {
     }
 
     public void playPlaylistByName(String name) {
+        stopTrack();
         boolean found = false;
         for (Playlist playlist : playlists.values()) {
             if (playlist.getName().equals(name)) {
@@ -100,6 +107,7 @@ class MP3Player {
     }
 
     public void playPlaylistByNumber(int playlistNumber) {
+        stopTrack();
         boolean found = false;
         for (Playlist playlist : playlists.values()) {
             if (playlist.getNumber() == playlistNumber) {
@@ -196,6 +204,7 @@ class MP3Player {
             player.close();
             System.out.println("Track stopped.");
             playThread.interrupt();
+            playing = false;
         } else {
             System.out.println("No track is currently playing.");
         }
@@ -208,8 +217,13 @@ class MP3Player {
             List<Track> tracks = currentPlaylist.getTracks();
             if (currentTrackIndex < tracks.size()) {
                 Track track = tracks.get(currentTrackIndex);
-                return "Now playing: " + track.getTitle() + " - " + track.getAuthor() + " (" + track.getDuration() + " seconds)";
-            } else {
+                if (playing) {
+                    return "Now playing: " + track.getTitle() + " - " + track.getAuthor() + " (" + track.getFormatedLength() + " seconds)";
+                } else {
+                    return "Track stopped: " + track.getTitle() + " - " + track.getAuthor() + " (" + track.getFormatedLength() + " seconds)";
+                }
+            }
+            else{
                 return "No more tracks to play.";
             }
         }
@@ -224,6 +238,7 @@ class MP3Player {
                 Track track = tracks.get(currentTrackIndex);
                 String currentTrackFilePath = track.getFilePath();
                 playTrack(currentTrackFilePath);
+                playing = true;
                 System.out.println("Now playing: " + track);
             } else {
                 System.out.println("No more tracks to play.");
@@ -232,9 +247,8 @@ class MP3Player {
     }
 
     public void playNextTrack() {
-        stopTrack();
-
         if (currentPlaylist != null) {
+            stopTrack();
             List<Track> tracks = currentPlaylist.getTracks();
             if (!tracks.isEmpty()) {
                 currentTrackIndex = (currentTrackIndex + 1) % tracks.size();
@@ -248,9 +262,8 @@ class MP3Player {
     }
 
     public void playPreviousTrack() {
-        stopTrack();
-
         if (currentPlaylist != null) {
+            stopTrack();
             List<Track> tracks = currentPlaylist.getTracks();
             if (!tracks.isEmpty()) {
 
@@ -266,9 +279,8 @@ class MP3Player {
 
 
     public void repeatCurrentTrack() {
-        stopTrack();
-
         if (currentPlaylist != null) {
+            stopTrack();
             List<Track> tracks = currentPlaylist.getTracks();
             if (!tracks.isEmpty()) {
                 playCurrentTrack();
@@ -358,6 +370,15 @@ class MP3Player {
             }
         }
         return null;
+    }
+
+    public int getPlaylistNumberByName(String playlistName) {
+        for (Playlist playlist : playlists.values()) {
+            if (Objects.equals(playlist.getName(), playlistName)) {
+                return playlist.getNumber();
+            }
+        }
+        return 0;
     }
 
     public void displayAllSongs() {

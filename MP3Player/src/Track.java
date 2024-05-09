@@ -24,11 +24,10 @@ public class Track {
             AudioFile audioFile = AudioFileIO.read(new File(filePath));
 
             Tag tag = audioFile.getTag();
+            this.title = mp3File.getFilename();
             if (tag != null) {
-                this.title = tag.getFirst(FieldKey.TITLE);
                 this.Author = tag.getFirst(FieldKey.ARTIST);
             } else {
-                this.title = mp3File.getFilename();
                 this.Author = "Unknown Artist";
             }
 
